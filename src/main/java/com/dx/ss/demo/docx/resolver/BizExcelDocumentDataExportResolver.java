@@ -1,10 +1,8 @@
 package com.dx.ss.demo.docx.resolver;
 
 import com.dx.ss.data.beans.DocumentBean;
-import com.dx.ss.data.doc.Documentation;
 import com.dx.ss.data.doc.ExcelDocument;
 import com.dx.ss.data.doc.XlsxDocumentation;
-import com.dx.ss.data.exception.ExcelDocumentException;
 import com.dx.ss.data.holder.ExcelDocumentDataHolder;
 import com.dx.ss.data.resolver.ExcelDocumentDataExportResolver;
 import com.dx.ss.data.util.ExcelDocumentUtil;
