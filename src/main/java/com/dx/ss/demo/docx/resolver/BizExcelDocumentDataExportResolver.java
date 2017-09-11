@@ -7,8 +7,7 @@ import com.dx.ss.data.holder.ExcelDocumentDataHolder;
 import com.dx.ss.data.resolver.ExcelDocumentDataExportResolver;
 import com.dx.ss.data.util.ExcelDocumentUtil;
 import com.dx.ss.demo.docx.beans.ParkFee;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.core.io.FileSystemResource;
 
 import java.io.FileOutputStream;
@@ -36,16 +35,25 @@ public class BizExcelDocumentDataExportResolver extends ExcelDocumentDataExportR
             Sheet sheet = doc.createSheet(workbook, "sheet-1");
             ArrayList<String> headerNames = new ArrayList<String>(){{
                 add("Number");
-                add("Entry_Time");
+                add("进入时间");
                 add("Exit_Time");
                 add("Is_Holiday");
                 add("Holiday_Rule");
                 add("Total");
             }};
-            doc.createHeaderRow(sheet, 0, headerNames, doc.headerCellStyle(workbook));
+            CellStyle headerCellStyle = doc.headerCellStyle(workbook);
+            doc.createHeaderRow(sheet, 0, headerNames, headerCellStyle);
+            /*headerCellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            Font font = doc.headerFont(workbook);
+            font.setBold(false);
+            headerCellStyle.setFont(font);
+            sheet.setColumnWidth(0, "number".length()*2*256);
+            sheet.setColumnWidth(1, "进入时间".length()*4*256);
+            sheet.setColumnWidth(3, "Is_Holiday".length()*2*256);*/
             ExcelDocumentUtil.fillData(sheet, 1, properties, dataList, doc.defaultCellStyle(workbook), new HashMap<String, Object>(){{
                 put("date_pattern", "yyyy-MM-dd hh:mm:ss");
             }});
+
             workbook.write(new FileOutputStream(doc.getDataResource().getFile()));
             workbook.close();
         } catch (Exception e) {
