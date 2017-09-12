@@ -1,6 +1,7 @@
 package com.dx.ss.demo.docx.resolver;
 
 import com.dx.ss.data.beans.DocumentBean;
+import com.dx.ss.data.beans.DocumentHeader;
 import com.dx.ss.data.doc.ExcelDocument;
 import com.dx.ss.data.doc.XlsxDocumentation;
 import com.dx.ss.data.holder.ExcelDocumentDataHolder;
@@ -14,6 +15,7 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class BizExcelDocumentDataExportResolver extends ExcelDocumentDataExportResolver<ExcelDocument> {
 
@@ -33,23 +35,27 @@ public class BizExcelDocumentDataExportResolver extends ExcelDocumentDataExportR
         try {
             Workbook workbook = doc.newWorkbook();
             Sheet sheet = doc.createSheet(workbook, "sheet-1");
-            ArrayList<String> headerNames = new ArrayList<String>(){{
+            ArrayList<String> headerNames = new ArrayList<String>(6){{
                 add("Number");
-                add("进入时间");
+                add("车辆所属单位");
                 add("Exit_Time");
                 add("Is_Holiday");
                 add("Holiday_Rule");
                 add("Total");
             }};
+            ArrayList<DocumentHeader> headers = new ArrayList<DocumentHeader>(headerNames.size());
+            for (String name : headerNames) {
+                DocumentHeader header = new DocumentHeader(name, name.length() * 2, Locale.CHINESE);
+                header.setCellStyle(doc.headerCellStyle(workbook));
+                headers.add(header);
+            }
             CellStyle headerCellStyle = doc.headerCellStyle(workbook);
-            doc.createHeaderRow(sheet, 0, headerNames, headerCellStyle);
-            /*headerCellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+            headerCellStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
             Font font = doc.headerFont(workbook);
             font.setBold(false);
             headerCellStyle.setFont(font);
-            sheet.setColumnWidth(0, "number".length()*2*256);
-            sheet.setColumnWidth(1, "进入时间".length()*4*256);
-            sheet.setColumnWidth(3, "Is_Holiday".length()*2*256);*/
+            doc.createHeaderRow(sheet, 0, 23, headers);
+
             ExcelDocumentUtil.fillData(sheet, 1, properties, dataList, doc.defaultCellStyle(workbook), new HashMap<String, Object>(){{
                 put("date_pattern", "yyyy-MM-dd hh:mm:ss");
             }});
